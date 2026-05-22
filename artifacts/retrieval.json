@@ -1,0 +1,137 @@
+[
+  {
+    "query_id": "Q1",
+    "question": "I requested a bank withdrawal yesterday. How long can it take after approval?",
+    "top_k": [
+      {
+        "rank": 1,
+        "chunk_id": "cash_withdrawal_processing_para_2",
+        "doc_title": "Cash withdrawal processing",
+        "score": 0.4952569603919983,
+        "chunk_text": "Bank withdrawals may take 1 to 3 business days after approval."
+      },
+      {
+        "rank": 2,
+        "chunk_id": "password_reset_and_account_recovery_para_1",
+        "doc_title": "Password reset and account recovery",
+        "score": 0.26889824867248535,
+        "chunk_text": "If a user forgets their password, they can request a reset email from the login page."
+      },
+      {
+        "rank": 3,
+        "chunk_id": "cash_withdrawal_processing_para_3",
+        "doc_title": "Cash withdrawal processing",
+        "score": 0.2554800510406494,
+        "chunk_text": "E-wallet withdrawals are typically processed within 4 hours after approval."
+      }
+    ]
+  },
+  {
+    "query_id": "Q2",
+    "question": "My reset link is not working after an hour. Is that expected?",
+    "top_k": [
+      {
+        "rank": 1,
+        "chunk_id": "password_reset_and_account_recovery_para_2",
+        "doc_title": "Password reset and account recovery",
+        "score": 0.3063608407974243,
+        "chunk_text": "Reset links expire after 30 minutes."
+      },
+      {
+        "rank": 2,
+        "chunk_id": "cash_withdrawal_processing_para_4",
+        "doc_title": "Cash withdrawal processing",
+        "score": 0.305406391620636,
+        "chunk_text": "If an account is under compliance review, withdrawals remain pending until the review is completed."
+      },
+      {
+        "rank": 3,
+        "chunk_id": "cash_withdrawal_processing_para_3",
+        "doc_title": "Cash withdrawal processing",
+        "score": 0.18194907903671265,
+        "chunk_text": "E-wallet withdrawals are typically processed within 4 hours after approval."
+      }
+    ]
+  },
+  {
+    "query_id": "Q3",
+    "question": "Can support tell me what my password currently is?",
+    "top_k": [
+      {
+        "rank": 1,
+        "chunk_id": "password_reset_and_account_recovery_para_3",
+        "doc_title": "Password reset and account recovery",
+        "score": 0.2844223976135254,
+        "chunk_text": "For security reasons, support agents cannot see or manually reveal user passwords."
+      },
+      {
+        "rank": 2,
+        "chunk_id": "password_reset_and_account_recovery_para_4",
+        "doc_title": "Password reset and account recovery",
+        "score": 0.2337193489074707,
+        "chunk_text": "If two-factor authentication is enabled and the user lost access to their authenticator app, backup codes can be used."
+      },
+      {
+        "rank": 3,
+        "chunk_id": "cash_withdrawal_processing_para_4",
+        "doc_title": "Cash withdrawal processing",
+        "score": 0.19178271293640137,
+        "chunk_text": "If an account is under compliance review, withdrawals remain pending until the review is completed."
+      }
+    ]
+  },
+  {
+    "query_id": "Q4",
+    "question": "Will a utility bill from 8 months ago work for proof of address?",
+    "top_k": [
+      {
+        "rank": 1,
+        "chunk_id": "document_verification_requirements_para_3",
+        "doc_title": "Document verification requirements",
+        "score": 0.3281048536300659,
+        "chunk_text": "Utility bills older than 6 months are not accepted."
+      },
+      {
+        "rank": 2,
+        "chunk_id": "document_verification_requirements_para_2",
+        "doc_title": "Document verification requirements",
+        "score": 0.29473578929901123,
+        "chunk_text": "Proof of address documents must show the user's full name, address, and issue date."
+      },
+      {
+        "rank": 3,
+        "chunk_id": "password_reset_and_account_recovery_para_1",
+        "doc_title": "Password reset and account recovery",
+        "score": 0.17998743057250977,
+        "chunk_text": "If a user forgets their password, they can request a reset email from the login page."
+      }
+    ]
+  },
+  {
+    "query_id": "Q5",
+    "question": "Can I withdraw profit made on a demo account?",
+    "top_k": [
+      {
+        "rank": 1,
+        "chunk_id": "demo_account_behaviour_para_3",
+        "doc_title": "Demo account behaviour",
+        "score": 0.42658519744873047,
+        "chunk_text": "Demo profit cannot be withdrawn."
+      },
+      {
+        "rank": 2,
+        "chunk_id": "password_reset_and_account_recovery_para_1",
+        "doc_title": "Password reset and account recovery",
+        "score": 0.25419414043426514,
+        "chunk_text": "If a user forgets their password, they can request a reset email from the login page."
+      },
+      {
+        "rank": 3,
+        "chunk_id": "demo_account_behaviour_para_4",
+        "doc_title": "Demo account behaviour",
+        "score": 0.23847466707229614,
+        "chunk_text": "Users should switch to a real account to trade with real funds."
+      }
+    ]
+  }
+]

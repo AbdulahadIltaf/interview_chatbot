@@ -1,0 +1,57 @@
+[
+  {
+    "query_id": "Q1",
+    "answer_label": "grounded_answer",
+    "answer": "Bank withdrawals may take 1 to 3 business days after approval [Cash withdrawal processing \u00a7cash_withdrawal_processing_para_2].",
+    "citations": [
+      "[Cash withdrawal processing \u00a7cash_withdrawal_processing_para_2]"
+    ],
+    "used_chunk_ids": [
+      "cash_withdrawal_processing_para_2"
+    ]
+  },
+  {
+    "query_id": "Q2",
+    "answer_label": "grounded_answer",
+    "answer": "No, it is not expected. Reset links expire after 30 minutes [Password reset and account recovery \u00a7password_reset_and_account_recovery_para_2].",
+    "citations": [
+      "[Password reset and account recovery \u00a7password_reset_and_account_recovery_para_2]"
+    ],
+    "used_chunk_ids": [
+      "password_reset_and_account_recovery_para_2"
+    ]
+  },
+  {
+    "query_id": "Q3",
+    "answer_label": "grounded_answer",
+    "answer": "No, support agents cannot see or manually reveal user passwords for security reasons [Password reset and account recovery \u00a7password_reset_and_account_recovery_para_3].",
+    "citations": [
+      "[Password reset and account recovery \u00a7password_reset_and_account_recovery_para_3]"
+    ],
+    "used_chunk_ids": [
+      "password_reset_and_account_recovery_para_3"
+    ]
+  },
+  {
+    "query_id": "Q4",
+    "answer_label": "grounded_answer",
+    "answer": "No, a utility bill from 8 months ago will not work for proof of address because utility bills older than 6 months are not accepted [Document verification requirements \u00a7document_verification_requirements_para_3].",
+    "citations": [
+      "[Document verification requirements \u00a7document_verification_requirements_para_3]"
+    ],
+    "used_chunk_ids": [
+      "document_verification_requirements_para_3"
+    ]
+  },
+  {
+    "query_id": "Q5",
+    "answer_label": "grounded_answer",
+    "answer": "No, demo profit cannot be withdrawn [Demo account behaviour \u00a7demo_account_behaviour_para_3].",
+    "citations": [
+      "[Demo account behaviour \u00a7demo_account_behaviour_para_3]"
+    ],
+    "used_chunk_ids": [
+      "demo_account_behaviour_para_3"
+    ]
+  }
+]

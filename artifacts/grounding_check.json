@@ -1,0 +1,67 @@
+[
+  {
+    "query_id": "Q1",
+    "citations_checked": [
+      {
+        "citation": "[Cash withdrawal processing \u00a7cash_withdrawal_processing_para_2]",
+        "chunk_id": "cash_withdrawal_processing_para_2",
+        "in_retrieval": true,
+        "word_overlap_ratio": 0.6666666666666666,
+        "has_supporting_wording": true
+      }
+    ],
+    "all_citations_valid": true
+  },
+  {
+    "query_id": "Q2",
+    "citations_checked": [
+      {
+        "citation": "[Password reset and account recovery \u00a7password_reset_and_account_recovery_para_2]",
+        "chunk_id": "password_reset_and_account_recovery_para_2",
+        "in_retrieval": true,
+        "word_overlap_ratio": 0.4166666666666667,
+        "has_supporting_wording": true
+      }
+    ],
+    "all_citations_valid": true
+  },
+  {
+    "query_id": "Q3",
+    "citations_checked": [
+      {
+        "citation": "[Password reset and account recovery \u00a7password_reset_and_account_recovery_para_3]",
+        "chunk_id": "password_reset_and_account_recovery_para_3",
+        "in_retrieval": true,
+        "word_overlap_ratio": 0.6470588235294118,
+        "has_supporting_wording": true
+      }
+    ],
+    "all_citations_valid": true
+  },
+  {
+    "query_id": "Q4",
+    "citations_checked": [
+      {
+        "citation": "[Document verification requirements \u00a7document_verification_requirements_para_3]",
+        "chunk_id": "document_verification_requirements_para_3",
+        "in_retrieval": true,
+        "word_overlap_ratio": 0.38095238095238093,
+        "has_supporting_wording": true
+      }
+    ],
+    "all_citations_valid": true
+  },
+  {
+    "query_id": "Q5",
+    "citations_checked": [
+      {
+        "citation": "[Demo account behaviour \u00a7demo_account_behaviour_para_3]",
+        "chunk_id": "demo_account_behaviour_para_3",
+        "in_retrieval": true,
+        "word_overlap_ratio": 0.5714285714285714,
+        "has_supporting_wording": true
+      }
+    ],
+    "all_citations_valid": true
+  }
+]

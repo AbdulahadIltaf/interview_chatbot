@@ -1,0 +1,17 @@
+{
+  "strategy_a_fixed_size": {
+    "top3_hit_rate": 1.0,
+    "total_queries": 5,
+    "hits": 5,
+    "partial_hits": 0,
+    "misses": 0
+  },
+  "strategy_b_paragraph_based": {
+    "top3_hit_rate": 1.0,
+    "total_queries": 5,
+    "hits": 5,
+    "partial_hits": 0,
+    "misses": 0
+  },
+  "tradeoff_explanation": "Fixed-size chunking (Strategy A) splits documents at rigid character counts (e.g. 120 chars). While it ensures uniform text size, it frequently cuts sentences in half, breaking semantic context. Paragraph-based chunking (Strategy B) splits text on line or paragraph breaks, preserving complete thoughts. This semantic integrity improves query retrieval precision and prevents word fragmentation, but can lead to variable chunk lengths depending on document structure."
+}

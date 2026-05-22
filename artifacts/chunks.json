@@ -1,0 +1,154 @@
+[
+  {
+    "chunk_id": "password_reset_and_account_recovery_para_1",
+    "doc_title": "Password reset and account recovery",
+    "section": "Login help",
+    "text": "If a user forgets their password, they can request a reset email from the login page.",
+    "start_char": 0,
+    "end_char": 85
+  },
+  {
+    "chunk_id": "password_reset_and_account_recovery_para_2",
+    "doc_title": "Password reset and account recovery",
+    "section": "Login help",
+    "text": "Reset links expire after 30 minutes.",
+    "start_char": 86,
+    "end_char": 122
+  },
+  {
+    "chunk_id": "password_reset_and_account_recovery_para_3",
+    "doc_title": "Password reset and account recovery",
+    "section": "Login help",
+    "text": "For security reasons, support agents cannot see or manually reveal user passwords.",
+    "start_char": 123,
+    "end_char": 205
+  },
+  {
+    "chunk_id": "password_reset_and_account_recovery_para_4",
+    "doc_title": "Password reset and account recovery",
+    "section": "Login help",
+    "text": "If two-factor authentication is enabled and the user lost access to their authenticator app, backup codes can be used.",
+    "start_char": 206,
+    "end_char": 324
+  },
+  {
+    "chunk_id": "password_reset_and_account_recovery_para_5",
+    "doc_title": "Password reset and account recovery",
+    "section": "Login help",
+    "text": "If backup codes are unavailable, the user must complete identity verification before 2FA can be reset.",
+    "start_char": 325,
+    "end_char": 427
+  },
+  {
+    "chunk_id": "cash_withdrawal_processing_para_1",
+    "doc_title": "Cash withdrawal processing",
+    "section": "Payments",
+    "text": "Withdrawal requests submitted before 17:00 UTC are usually reviewed on the same business day.",
+    "start_char": 0,
+    "end_char": 93
+  },
+  {
+    "chunk_id": "cash_withdrawal_processing_para_2",
+    "doc_title": "Cash withdrawal processing",
+    "section": "Payments",
+    "text": "Bank withdrawals may take 1 to 3 business days after approval.",
+    "start_char": 94,
+    "end_char": 156
+  },
+  {
+    "chunk_id": "cash_withdrawal_processing_para_3",
+    "doc_title": "Cash withdrawal processing",
+    "section": "Payments",
+    "text": "E-wallet withdrawals are typically processed within 4 hours after approval.",
+    "start_char": 157,
+    "end_char": 232
+  },
+  {
+    "chunk_id": "cash_withdrawal_processing_para_4",
+    "doc_title": "Cash withdrawal processing",
+    "section": "Payments",
+    "text": "If an account is under compliance review, withdrawals remain pending until the review is completed.",
+    "start_char": 233,
+    "end_char": 332
+  },
+  {
+    "chunk_id": "cash_withdrawal_processing_para_5",
+    "doc_title": "Cash withdrawal processing",
+    "section": "Payments",
+    "text": "Users can check the withdrawal status from the cashier history page.",
+    "start_char": 333,
+    "end_char": 401
+  },
+  {
+    "chunk_id": "document_verification_requirements_para_1",
+    "doc_title": "Document verification requirements",
+    "section": "Verification",
+    "text": "Proof of identity documents must be valid and unexpired.",
+    "start_char": 0,
+    "end_char": 56
+  },
+  {
+    "chunk_id": "document_verification_requirements_para_2",
+    "doc_title": "Document verification requirements",
+    "section": "Verification",
+    "text": "Proof of address documents must show the user's full name, address, and issue date.",
+    "start_char": 57,
+    "end_char": 140
+  },
+  {
+    "chunk_id": "document_verification_requirements_para_3",
+    "doc_title": "Document verification requirements",
+    "section": "Verification",
+    "text": "Utility bills older than 6 months are not accepted.",
+    "start_char": 141,
+    "end_char": 192
+  },
+  {
+    "chunk_id": "document_verification_requirements_para_4",
+    "doc_title": "Document verification requirements",
+    "section": "Verification",
+    "text": "Bank statements older than 3 months are not accepted.",
+    "start_char": 193,
+    "end_char": 246
+  },
+  {
+    "chunk_id": "document_verification_requirements_para_5",
+    "doc_title": "Document verification requirements",
+    "section": "Verification",
+    "text": "Images must be clear, uncropped, and readable.",
+    "start_char": 247,
+    "end_char": 293
+  },
+  {
+    "chunk_id": "demo_account_behaviour_para_1",
+    "doc_title": "Demo account behaviour",
+    "section": "Trading",
+    "text": "Demo accounts use virtual funds and do not reflect real-market execution exactly.",
+    "start_char": 0,
+    "end_char": 81
+  },
+  {
+    "chunk_id": "demo_account_behaviour_para_2",
+    "doc_title": "Demo account behaviour",
+    "section": "Trading",
+    "text": "Prices may be delayed in some environments.",
+    "start_char": 82,
+    "end_char": 125
+  },
+  {
+    "chunk_id": "demo_account_behaviour_para_3",
+    "doc_title": "Demo account behaviour",
+    "section": "Trading",
+    "text": "Demo profit cannot be withdrawn.",
+    "start_char": 126,
+    "end_char": 158
+  },
+  {
+    "chunk_id": "demo_account_behaviour_para_4",
+    "doc_title": "Demo account behaviour",
+    "section": "Trading",
+    "text": "Users should switch to a real account to trade with real funds.",
+    "start_char": 159,
+    "end_char": 222
+  }
+]

@@ -1,0 +1,81 @@
+{
+  "summary": {
+    "top3_hit_rate": 1.0,
+    "total_queries": 5,
+    "hits": 5,
+    "partial_hits": 0,
+    "misses": 0
+  },
+  "results": [
+    {
+      "query_id": "Q1",
+      "expected_doc_titles": [
+        "Cash withdrawal processing"
+      ],
+      "retrieved_doc_titles_top3": [
+        "Cash withdrawal processing",
+        "Password reset and account recovery",
+        "Cash withdrawal processing"
+      ],
+      "retrieval_status": "hit",
+      "matched_expected_title": true,
+      "explanation": "All expected titles ['Cash withdrawal processing'] found in top 3."
+    },
+    {
+      "query_id": "Q2",
+      "expected_doc_titles": [
+        "Password reset and account recovery"
+      ],
+      "retrieved_doc_titles_top3": [
+        "Password reset and account recovery",
+        "Cash withdrawal processing",
+        "Cash withdrawal processing"
+      ],
+      "retrieval_status": "hit",
+      "matched_expected_title": true,
+      "explanation": "All expected titles ['Password reset and account recovery'] found in top 3."
+    },
+    {
+      "query_id": "Q3",
+      "expected_doc_titles": [
+        "Password reset and account recovery"
+      ],
+      "retrieved_doc_titles_top3": [
+        "Password reset and account recovery",
+        "Password reset and account recovery",
+        "Cash withdrawal processing"
+      ],
+      "retrieval_status": "hit",
+      "matched_expected_title": true,
+      "explanation": "All expected titles ['Password reset and account recovery'] found in top 3."
+    },
+    {
+      "query_id": "Q4",
+      "expected_doc_titles": [
+        "Document verification requirements"
+      ],
+      "retrieved_doc_titles_top3": [
+        "Document verification requirements",
+        "Document verification requirements",
+        "Password reset and account recovery"
+      ],
+      "retrieval_status": "hit",
+      "matched_expected_title": true,
+      "explanation": "All expected titles ['Document verification requirements'] found in top 3."
+    },
+    {
+      "query_id": "Q5",
+      "expected_doc_titles": [
+        "Demo account behaviour"
+      ],
+      "retrieved_doc_titles_top3": [
+        "Demo account behaviour",
+        "Password reset and account recovery",
+        "Demo account behaviour"
+      ],
+      "retrieval_status": "hit",
+      "matched_expected_title": true,
+      "explanation": "All expected titles ['Demo account behaviour'] found in top 3."
+    }
+  ]
+}

@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Replayable Mini-RAG Dashboard</title>
+  <!-- Google Fonts: Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #0a0814;
+      --bg-card: rgba(18, 14, 33, 0.7);
+      --bg-card-hover: rgba(26, 20, 46, 0.85);
+      --border-color: rgba(139, 92, 246, 0.15);
+      --border-glow: rgba(139, 92, 246, 0.3);
+      --text-main: #f1f0f7;
+      --text-muted: #9f9cb8;
+      
+      --primary: #8b5cf6;
+      --primary-glow: rgba(139, 92, 246, 0.4);
+      --secondary: #4f46e5;
+      
+      --success: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.2);
+      --warning: #f59e0b;
+      --warning-glow: rgba(245, 158, 11, 0.2);
+      --danger: #ef4444;
+      --danger-glow: rgba(239, 68, 68, 0.2);
+      --info: #06b6d4;
+      
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(at 10% 10%, rgba(79, 70, 229, 0.08) 0px, transparent 50%),
+        radial-gradient(at 90% 90%, rgba(139, 92, 246, 0.08) 0px, transparent 50%);
+      background-attachment: fixed;
+      font-family: 'Outfit', sans-serif;
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 2rem 1.5rem;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    /* HEADER */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1.5rem;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo-badge {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3);
+      font-weight: 800;
+      font-size: 1.3rem;
+      color: #fff;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      background: linear-gradient(to right, #fff, #b7a6ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .server-status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      padding: 0.4rem 1rem;
+      border-radius: 99px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--success);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--success);
+      box-shadow: 0 0 10px var(--success);
+      animation: pulse 1.8s infinite;
+    }
+
+    /* GLASS CARD */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      backdrop-filter: blur(16px);
+      border-radius: 20px;
+      padding: 1.8rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      transition: var(--transition);
+    }
+
+    .card:hover {
+      border-color: var(--border-glow);
+      box-shadow: 0 15px 35px rgba(139, 92, 246, 0.08);
+    }
+
+    /* GRID LAYOUTS */
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 1024px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* METRIC WIDGETS */
+    .metric-card {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .metric-value-container {
+      flex: 1;
+    }
+
+    .metric-title {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+
+    .metric-number {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .metric-icon-circle {
+      width: 60px;
+      height: 60px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .bg-hit { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25); color: var(--success); }
+    .bg-partial { background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.25); color: var(--warning); }
+    .bg-miss { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); color: var(--danger); }
+    .bg-primary-fade { background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.25); color: var(--primary); }
+
+    /* CIRCULAR PROGRESS */
+    .accuracy-metric {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .circle-progress-container {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin-bottom: 0.8rem;
+    }
+
+    svg.progress-ring {
+      width: 120px;
+      height: 120px;
+      transform: rotate(-90deg);
+    }
+
+    circle.ring-bg {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.05);
+      stroke-width: 8;
+    }
+
+    circle.ring-val {
+      fill: none;
+      stroke: url(#ring-gradient);
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 301.6;
+      stroke-dashoffset: 301.6; /* formula: 2 * pi * r. r=48 => 301.59 */
+      transition: stroke-dashoffset 1s ease-out;
+    }
+
+    .circle-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    /* PLAYGROUND SECTION */
+    .playground-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 18px;
+      background: var(--primary);
+      border-radius: 4px;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .search-input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 0.9rem 1.2rem;
+      color: #fff;
+      font-family: inherit;
+      font-size: 1rem;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 12px rgba(139, 92, 246, 0.15);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .search-btn {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 0 1.8rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 15px rgba(139, 92, 246, 0.2);
+    }
+
+    .search-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(139, 92, 246, 0.35);
+    }
+
+    .search-btn:active {
+      transform: translateY(0);
+    }
+
+    /* RESULT AREA */
+    .result-container {
+      display: none;
+      animation: slideDown 0.4s ease-out;
+    }
+
+    .label-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 1rem;
+    }
+
+    .label-grounded { background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.25); color: var(--success); }
+    .label-insufficient { background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.25); color: var(--warning); }
+    .label-conflicting { background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.25); color: var(--danger); }
+
+    .answer-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.2rem;
+      margin-bottom: 1.5rem;
+      font-size: 1.05rem;
+    }
+
+    .citation-bracket {
+      color: var(--primary);
+      font-weight: 600;
+      background: rgba(139, 92, 246, 0.08);
+      border-radius: 4px;
+      padding: 0.1rem 0.3rem;
+      font-size: 0.9rem;
+      border: 1px solid rgba(139, 92, 246, 0.15);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .citation-bracket:hover {
+      background: rgba(139, 92, 246, 0.2);
+    }
+
+    .chunks-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .retrieved-chunks-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .chunk-card {
+      background: rgba(255, 255, 255, 0.015);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .chunk-card:hover {
+      border-color: rgba(139, 92, 246, 0.25);
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .chunk-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.6rem;
+      font-size: 0.85rem;
+    }
+
+    .chunk-id-tag {
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .chunk-score-pill {
+      background: rgba(139, 92, 246, 0.06);
+      border: 1px solid rgba(139, 92, 246, 0.15);
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    .chunk-text {
+      font-size: 0.95rem;
+      color: var(--text-main);
+    }
+
+    .chunk-highlight {
+      background: rgba(139, 92, 246, 0.15);
+      border-bottom: 2px solid var(--primary);
+      padding: 0.1rem 0.2rem;
+    }
+
+    /* BASELINE CASES SECTION */
+    .baselines-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .baseline-item {
+      background: rgba(255, 255, 255, 0.01);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    .baseline-item:hover {
+      border-color: rgba(139, 92, 246, 0.2);
+    }
+
+    .baseline-header {
+      padding: 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      background: rgba(255, 255, 255, 0.005);
+    }
+
+    .baseline-header-left {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .baseline-id {
+      background: rgba(255, 255, 255, 0.04);
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .baseline-question {
+      font-weight: 600;
+      font-size: 0.98rem;
+      color: #fff;
+    }
+
+    .baseline-body {
+      display: none;
+      padding: 1.2rem;
+      border-top: 1px solid var(--border-color);
+      background: rgba(0, 0, 0, 0.1);
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .baseline-detail-row {
+      margin-bottom: 1rem;
+    }
+
+    .baseline-detail-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .baseline-detail-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      margin-bottom: 0.2rem;
+    }
+
+    .baseline-detail-content {
+      font-size: 0.95rem;
+    }
+
+    .status-badge {
+      padding: 0.3rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .status-hit { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25); color: var(--success); }
+    .status-partial { background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.25); color: var(--warning); }
+    .status-miss { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); color: var(--danger); }
+
+    /* CHUNKING STRATEGY COMPARISON */
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .comparison-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .strat-card {
+      background: rgba(255, 255, 255, 0.015);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+    }
+
+    .strat-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .strat-stat-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .tradeoff-box {
+      grid-column: span 2;
+      background: rgba(139, 92, 246, 0.03);
+      border: 1px solid rgba(139, 92, 246, 0.1);
+      border-radius: 16px;
+      padding: 1.5rem;
+      font-size: 0.98rem;
+    }
+
+    @media (max-width: 768px) {
+      .tradeoff-box {
+        grid-column: span 1;
+      }
+    }
+
+    /* CITATION GROUNDING MATRIX */
+    .grounding-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    .grounding-table th {
+      text-align: left;
+      padding: 0.8rem 1rem;
+      border-bottom: 2px solid var(--border-color);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
+
+    .grounding-table td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.95rem;
+    }
+
+    .verification-status {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-weight: 600;
+    }
+
+    /* LOADING SPINNER */
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    .loading-container {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 0.8rem;
+      padding: 2rem;
+      color: var(--text-muted);
+    }
+
+    /* ANIMATIONS */
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.5; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .chevron {
+      transition: var(--transition);
+      transform: rotate(0deg);
+    }
+
+    .baseline-item.active .chevron {
+      transform: rotate(180deg);
+    }
+
+    .error-toast {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      color: var(--danger);
+      margin-bottom: 2rem;
+      display: none;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .arrow-icon {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- ERROR TOAST -->
+    <div id="error-toast" class="error-toast">
+      <span style="font-size: 1.2rem;">⚠️</span>
+      <span id="error-message">Failed to load RAG metrics artifacts. Run the pipeline backend first to generate findings.</span>
+    </div>
+
+    <!-- HEADER -->
+    <header>
+      <div class="logo-container">
+        <div class="logo-badge">R</div>
+        <div>
+          <h1>Mini-RAG Pipeline Analyzer</h1>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Visualizer for product evaluation & grounded answers</p>
+        </div>
+      </div>
+      <div class="server-status">
+        <div class="status-dot"></div>
+        <span>FastAPI Online</span>
+      </div>
+    </header>
+
+    <!-- METRICS ROW -->
+    <div class="metrics-row">
+      <!-- Accuracy Radial Meter -->
+      <div class="card metric-card" style="grid-column: span 1; justify-content: space-around;">
+        <div class="accuracy-metric">
+          <div class="circle-progress-container">
+            <svg class="progress-ring">
+              <defs>
+                <linearGradient id="ring-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="var(--primary)"></stop>
+                  <stop offset="100%" stop-color="var(--success)"></stop>
+                </linearGradient>
+              </defs>
+              <circle class="ring-bg" cx="60" cy="60" r="48"></circle>
+              <circle id="progress-circle" class="ring-val" cx="60" cy="60" r="48"></circle>
+            </svg>
+            <div id="hit-rate-text" class="circle-text">0%</div>
+          </div>
+          <span class="metric-title" style="margin-bottom: 0;">Top-3 Hit Rate</span>
+        </div>
+      </div>
+
+      <!-- Hits Card -->
+      <div class="card metric-card">
+        <div class="metric-icon-circle bg-hit">✓</div>
+        <div class="metric-value-container">
+          <div class="metric-title">Full Hits</div>
+          <div id="total-hits" class="metric-number">0</div>
+        </div>
+      </div>
+
+      <!-- Partial Hits Card -->
+      <div class="card metric-card">
+        <div class="metric-icon-circle bg-partial">~</div>
+        <div class="metric-value-container">
+          <div class="metric-title">Partial Hits</div>
+          <div id="total-partials" class="metric-number">0</div>
+        </div>
+      </div>
+
+      <!-- Misses Card -->
+      <div class="card metric-card">
+        <div class="metric-icon-circle bg-miss">✗</div>
+        <div class="metric-value-container">
+          <div class="metric-title">Misses</div>
+          <div id="total-misses" class="metric-number">0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="main-grid">
+      
+      <!-- LEFT COLUMN: INTERACTIVE QA PLAYGROUND -->
+      <div class="card" style="display: flex; flex-direction: column; gap: 1rem;">
+        <div class="playground-header">
+          <div class="section-title">Interactive Q&A Playground</div>
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Query Chroma DB + Groq Live</span>
+        </div>
+
+        <div class="search-box">
+          <input type="text" id="query-input" class="search-input" placeholder="Type a custom query (e.g. 'Can I withdraw my demo profit?')...">
+          <button id="submit-query-btn" class="search-btn" onclick="submitQuery()">
+            <span>Query Pipeline</span>
+          </button>
+        </div>
+
+        <!-- Loading View -->
+        <div id="playground-loading" class="loading-container">
+          <div class="spinner"></div>
+          <span>Retrieving chunks & generating LLM response...</span>
+        </div>
+
+        <!-- Playground Output Area -->
+        <div id="playground-result" class="result-container">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div id="result-label" class="label-pill">GROUNDED_ANSWER</div>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">Citation-Strict Response</span>
+          </div>
+          
+          <div id="result-answer" class="answer-box">
+            <!-- Answer text goes here -->
+          </div>
+
+          <div class="chunks-title">Retrieved Reference Chunks (Top-3 Cosine Similarity)</div>
+          <div id="result-chunks" class="retrieved-chunks-list">
+            <!-- Chunk cards will be inserted here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: BASELINE CASES EXPLORER -->
+      <div class="card" style="display: flex; flex-direction: column; gap: 1.5rem;">
+        <div class="section-title">Baseline Evaluation Queries</div>
+        <div id="baseline-cases-list" class="baselines-container">
+          <!-- Accordion baseline items will go here -->
+          <div style="text-align: center; color: var(--text-muted); padding: 2rem;">Loading queries...</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CHUNKING COMPARISON SECTION -->
+    <div class="card" style="margin-bottom: 2rem; display: flex; flex-direction: column; gap: 1.5rem;">
+      <div class="section-title">Chunking Strategy Evaluation Comparison</div>
+      
+      <div class="comparison-grid">
+        <!-- Strategy A -->
+        <div class="strat-card">
+          <div class="strat-name">
+            <span style="color: var(--primary);">Strategy A</span>
+            <span>- Fixed-Size Chunking</span>
+          </div>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">Uniform division of characters (120 chars) with 20-character overlapping sliding window.</p>
+          <div class="strat-stat-row">
+            <span>Accuracy Hit Rate:</span>
+            <strong id="strat-a-hit-rate" style="color: #fff;">0%</strong>
+          </div>
+          <div class="strat-stat-row">
+            <span>Total Evaluated Hits:</span>
+            <span id="strat-a-hits" style="color: var(--text-muted);">0</span>
+          </div>
+          <div class="strat-stat-row">
+            <span>Total Evaluated Misses:</span>
+            <span id="strat-a-misses" style="color: var(--text-muted);">0</span>
+          </div>
+        </div>
+
+        <!-- Strategy B -->
+        <div class="strat-card" style="border-color: rgba(16, 185, 129, 0.25); background: rgba(16, 185, 129, 0.015);">
+          <div class="strat-name">
+            <span style="color: var(--success);">Strategy B</span>
+            <span>- Paragraph-Based Chunking</span>
+          </div>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">Logical block splits matching paragraphs or carriage lines. Preserves sentences intact.</p>
+          <div class="strat-stat-row">
+            <span>Accuracy Hit Rate:</span>
+            <strong id="strat-b-hit-rate" style="color: var(--success);">0%</strong>
+          </div>
+          <div class="strat-stat-row">
+            <span>Total Evaluated Hits:</span>
+            <span id="strat-b-hits" style="color: var(--text-muted);">0</span>
+          </div>
+          <div class="strat-stat-row">
+            <span>Total Evaluated Misses:</span>
+            <span id="strat-b-misses" style="color: var(--text-muted);">0</span>
+          </div>
+        </div>
+
+        <!-- Tradeoff explanation -->
+        <div class="tradeoff-box">
+          <div style="font-weight: 700; margin-bottom: 0.5rem; color: var(--primary); font-size: 0.9rem; text-transform: uppercase;">Tradeoff & Evaluation Analysis:</div>
+          <p id="tradeoff-text" style="color: var(--text-muted); line-height: 1.5; font-size: 0.95rem;">
+            Loading chunking analysis tradeoffs...
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- GROUNDING MATRIX SECTION -->
+    <div class="card" style="display: flex; flex-direction: column; gap: 1.5rem;">
+      <div class="section-title">Citation Grounding & Attribution Matrix</div>
+      <p style="color: var(--text-muted); font-size: 0.92rem; margin-top: -0.5rem;">Programmatic evaluation verification confirming that all citations used in the answers are present in retrieved contexts, and meet keyword overlap thresholds.</p>
+      
+      <div style="overflow-x: auto;">
+        <table class="grounding-table">
+          <thead>
+            <tr>
+              <th style="width: 10%;">ID</th>
+              <th style="width: 35%;">Citations Used</th>
+              <th style="width: 35%;">Referenced Chunk ID</th>
+              <th style="width: 20%;">Overlap Validation</th>
+            </tr>
+          </thead>
+          <tbody id="grounding-table-body">
+            <tr>
+              <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">Loading grounding check stats...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Global metrics store
+    let metricsData = {};
+
+    // Trigger API metrics loading
+    window.addEventListener('DOMContentLoaded', () => {
+      fetchMetrics();
+    });
+
+    function fetchMetrics() {
+      fetch('/api/metrics')
+        .then(response => {
+          if (!response.ok) throw new Error('HTTP status ' + response.status);
+          return response.json();
+        })
+        .then(data => {
+          metricsData = data;
+          
+          // Check for error values in backend JSON loading
+          if (data.eval.error || data.chunking_comparison.error) {
+            showError("Artifact files missing. Run the RAG pipeline (`python src/pipeline.py`) first to generate stats.");
+            return;
+          }
+          
+          populateDashboard(data);
+        })
+        .catch(err => {
+          console.error("Error loading metrics:", err);
+          showError("Could not connect to FastAPI server. Please start the server backend.");
+        });
+    }
+
+    function showError(msg) {
+      document.getElementById('error-toast').style.display = 'flex';
+      document.getElementById('error-message').textContent = msg;
+    }
+
+    function populateDashboard(data) {
+      // 1. Overall stats
+      const summary = data.eval.summary;
+      const hitRate = Math.round(summary.top3_hit_rate * 100);
+      
+      // Update circular meter
+      document.getElementById('hit-rate-text').textContent = hitRate + '%';
+      const circle = document.getElementById('progress-circle');
+      // Calculate offset based on hit rate (301.6 circumference)
+      const offset = 301.6 - (summary.top3_hit_rate * 301.6);
+      circle.style.strokeDashoffset = offset;
+      
+      // Numbers
+      document.getElementById('total-hits').textContent = summary.hits;
+      document.getElementById('total-partials').textContent = summary.partial_hits;
+      document.getElementById('total-misses').textContent = summary.misses;
+
+      // 2. Baselines accordion
+      const evalResults = data.eval.results;
+      const answersList = data.answers;
+      const retrievalList = data.retrieval;
+      const baselinesList = document.getElementById('baseline-cases-list');
+      baselinesList.innerHTML = '';
+
+      evalResults.forEach((evalItem, index) => {
+        const qid = evalItem.query_id;
+        const answerItem = answersList.find(a => a.query_id === qid) || {};
+        const retrievalItem = retrievalList.find(r => r.query_id === qid) || {};
+        
+        const statusClass = evalItem.retrieval_status === 'hit' ? 'status-hit' 
+                          : evalItem.retrieval_status === 'partial_hit' ? 'status-partial' 
+                          : 'status-miss';
+                          
+        const cleanStatusText = evalItem.retrieval_status === 'hit' ? 'Hit' 
+                          : evalItem.retrieval_status === 'partial_hit' ? 'Partial Hit' 
+                          : 'Miss';
+
+        const itemEl = document.createElement('div');
+        itemEl.className = 'baseline-item';
+        itemEl.innerHTML = `
+          <div class="baseline-header" onclick="toggleAccordion(this)">
+            <div class="baseline-header-left">
+              <span class="baseline-id">${qid}</span>
+              <span class="baseline-question">${retrievalItem.question}</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.8rem;">
+              <span class="status-badge ${statusClass}">${cleanStatusText}</span>
+              <span class="chevron" style="display:inline-block; font-size: 0.8rem;">▼</span>
+            </div>
+          </div>
+          <div class="baseline-body">
+            <div class="baseline-detail-row">
+              <div class="baseline-detail-label">Expected Document Titles</div>
+              <div class="baseline-detail-content" style="color: var(--info); font-weight: 500;">
+                ${evalItem.expected_doc_titles.join(', ')}
+              </div>
+            </div>
+            <div class="baseline-detail-row">
+              <div class="baseline-detail-label">Top 3 Retrieved Titles</div>
+              <div class="baseline-detail-content">
+                ${evalItem.retrieved_doc_titles_top3.join(', ')}
+              </div>
+            </div>
+            <div class="baseline-detail-row">
+              <div class="baseline-detail-label">RAG Answer Label</div>
+              <div class="baseline-detail-content">
+                <span class="label-pill ${getLabelClass(answerItem.answer_label)}">${answerItem.answer_label}</span>
+              </div>
+            </div>
+            <div class="baseline-detail-row">
+              <div class="baseline-detail-label">Generated Grounded Answer</div>
+              <div class="baseline-detail-content" style="background: rgba(255,255,255,0.02); padding: 0.8rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                ${renderCitationsInAnswer(answerItem.answer || "No response generated.")}
+              </div>
+            </div>
+            <div class="baseline-detail-row">
+              <div class="baseline-detail-label">Attributions (Citations)</div>
+              <div class="baseline-detail-content" style="font-family: monospace; color: var(--primary);">
+                ${answerItem.citations && answerItem.citations.length > 0 ? answerItem.citations.join(', ') : 'None'}
+              </div>
+            </div>
+          </div>
+        `;
+        baselinesList.appendChild(itemEl);
+      });
+
+      // 3. Chunking comparison
+      const comparison = data.chunking_comparison;
+      
+      const rateA = Math.round(comparison.strategy_a_fixed_size.top3_hit_rate * 100);
+      const rateB = Math.round(comparison.strategy_b_paragraph_based.top3_hit_rate * 100);
+      
+      document.getElementById('strat-a-hit-rate').textContent = rateA + '%';
+      document.getElementById('strat-a-hits').textContent = `${comparison.strategy_a_fixed_size.hits} hits (including partials)`;
+      document.getElementById('strat-a-misses').textContent = `${comparison.strategy_a_fixed_size.misses} misses`;
+      
+      document.getElementById('strat-b-hit-rate').textContent = rateB + '%';
+      document.getElementById('strat-b-hits').textContent = `${comparison.strategy_b_paragraph_based.hits + comparison.strategy_b_paragraph_based.partial_hits} hits (including partials)`;
+      document.getElementById('strat-b-misses').textContent = `${comparison.strategy_b_paragraph_based.misses} misses`;
+      
+      document.getElementById('tradeoff-text').textContent = comparison.tradeoff_explanation;
+
+      // 4. Grounding Matrix Table
+      const grounding = data.grounding_check;
+      const tbody = document.getElementById('grounding-table-body');
+      tbody.innerHTML = '';
+
+      if (!grounding || grounding.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">No grounding checks found.</td></tr>';
+        return;
+      }
+
+      grounding.forEach(gItem => {
+        const qid = gItem.query_id;
+        
+        if (!gItem.citations_checked || gItem.citations_checked.length === 0) {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td style="font-weight: 700; color: var(--text-muted);">${qid}</td>
+            <td colspan="2" style="font-style: italic; color: var(--text-muted);">No citations required (insufficient context)</td>
+            <td>
+              <div class="verification-status" style="color: var(--success);">
+                <span>✓ Verified</span>
+              </div>
+            </td>
+          `;
+          tbody.appendChild(row);
+          return;
+        }
+
+        gItem.citations_checked.forEach((citCheck, subIdx) => {
+          const row = document.createElement('tr');
+          
+          // ID cell only on first citation row for grouping, or just show on all
+          const idCell = subIdx === 0 ? `<td style="font-weight: 700; color: #fff;" rowspan="${gItem.citations_checked.length}">${qid}</td>` : '';
+          
+          const statusHTML = citCheck.in_retrieval && citCheck.has_supporting_wording
+            ? `<div class="verification-status" style="color: var(--success);"><span>✓ Valid</span></div>`
+            : `<div class="verification-status" style="color: var(--danger);"><span>✗ Invalid Citation</span></div>`;
+
+          row.innerHTML = `
+            ${idCell}
+            <td style="font-family: monospace; color: var(--primary); font-size: 0.88rem;">${citCheck.citation}</td>
+            <td style="font-family: monospace; font-size: 0.88rem; color: var(--text-muted);">${citCheck.chunk_id}</td>
+            <td>
+              ${statusHTML}
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Overlap ratio: ${(citCheck.word_overlap_ratio * 100).toFixed(1)}%</div>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+      });
+    }
+
+    function toggleAccordion(header) {
+      const item = header.parentElement;
+      const body = item.querySelector('.baseline-body');
+      
+      const isActive = item.classList.contains('active');
+      
+      if (isActive) {
+        body.style.display = 'none';
+        item.classList.remove('active');
+      } else {
+        body.style.display = 'block';
+        item.classList.add('active');
+      }
+    }
+
+    function getLabelClass(label) {
+      if (label === 'grounded_answer') return 'label-grounded';
+      if (label === 'insufficient_context') return 'label-insufficient';
+      return 'label-conflicting';
+    }
+
+    function renderCitationsInAnswer(answerText) {
+      // Replaces [doc §chunk_id] with styled elements
+      return answerText.replace(/(\[([^§\]]+?)\s*§\s*([^\]]+?)\])/g, (match, p1, p2, p3) => {
+        return `<span class="citation-bracket" onclick="scrollToChunk('${p3.trim()}')">${match}</span>`;
+      });
+    }
+
+    // SCROLL TO CITED CHUNK IN THE PLAYGROUND
+    function scrollToChunk(chunkId) {
+      const element = document.getElementById('chunk-' + chunkId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        element.style.borderColor = 'var(--primary)';
+        element.style.boxShadow = '0 0 15px var(--primary-glow)';
+        setTimeout(() => {
+          element.style.borderColor = 'var(--border-color)';
+          element.style.boxShadow = 'none';
+        }, 2000);
+      }
+    }
+
+    // REAL-TIME PLAYGROUND SUBMISSION
+    function submitQuery() {
+      const queryInput = document.getElementById('query-input');
+      const question = queryInput.value.trim();
+      if (!question) return;
+
+      const submitBtn = document.getElementById('submit-query-btn');
+      const loading = document.getElementById('playground-loading');
+      const resultContainer = document.getElementById('playground-result');
+
+      // Update UI for loading state
+      submitBtn.disabled = true;
+      loading.style.display = 'flex';
+      resultContainer.style.display = 'none';
+
+      fetch('/answer', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ question: question })
+      })
+      .then(response => {
+        if (!response.ok) throw new Error('HTTP Status ' + response.status);
+        return response.json();
+      })
+      .then(data => {
+        displayPlaygroundResult(data, question);
+      })
+      .catch(err => {
+        console.error("Error submitting query:", err);
+        alert("Query processing failed. Make sure your GROK_API_KEY is configured in the backend.");
+      })
+      .finally(() => {
+        submitBtn.disabled = false;
+        loading.style.display = 'none';
+      });
+    }
+
+    function displayPlaygroundResult(data, question) {
+      const resultContainer = document.getElementById('playground-result');
+      const label = document.getElementById('result-label');
+      const answer = document.getElementById('result-answer');
+      const chunksList = document.getElementById('result-chunks');
+
+      // 1. Update Label Class and Text
+      label.textContent = data.answer_label;
+      label.className = 'label-pill ' + getLabelClass(data.answer_label);
+
+      // 2. Render Answer
+      answer.innerHTML = renderCitationsInAnswer(data.answer);
+
+      // 3. Render Chunks
+      chunksList.innerHTML = '';
+      if (!data.retrieved_chunks || data.retrieved_chunks.length === 0) {
+        chunksList.innerHTML = '<div style="color: var(--text-muted); font-style: italic;">No reference chunks retrieved.</div>';
+      } else {
+        data.retrieved_chunks.forEach(chunk => {
+          const chunkCard = document.createElement('div');
+          chunkCard.className = 'chunk-card';
+          chunkCard.id = 'chunk-' + chunk.chunk_id;
+          
+          // Get keywords from query to highlight in text
+          const highlightedText = highlightTerms(chunk.chunk_text, question);
+
+          chunkCard.innerHTML = `
+            <div class="chunk-meta">
+              <span class="chunk-id-tag">${chunk.chunk_id}</span>
+              <div style="display:flex; gap:0.5rem; align-items:center;">
+                <span style="font-size:0.75rem; color:var(--text-muted);">${chunk.doc_title} (Rank ${chunk.rank})</span>
+                <span class="chunk-score-pill">Score: ${chunk.score.toFixed(3)}</span>
+              </div>
+            </div>
+            <div class="chunk-text">${highlightedText}</div>
+          `;
+          chunksList.appendChild(chunkCard);
+        });
+      }
+
+      // Show the output card
+      resultContainer.style.display = 'block';
+    }
+
+    function highlightTerms(text, query) {
+      // Find all terms of 4+ characters from query and highlight them
+      const words = query.toLowerCase()
+        .replace(/[^\w\s]/g, '')
+        .split(/\s+/)
+        .filter(w => w.length >= 4);
+
+      if (words.length === 0) return text;
+
+      // Unique terms to avoid nested replacements
+      const uniqueWords = [...new Set(words)];
+      let highlighted = text;
+      
+      uniqueWords.forEach(word => {
+        const regex = new RegExp(`\\b(${word}\\w*)\\b`, 'gi');
+        highlighted = highlighted.replace(regex, '<span class="chunk-highlight">$1</span>');
+      });
+
+      return highlighted;
+    }
+  </script>
+</body>
+</html>
