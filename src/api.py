@@ -29,7 +29,11 @@ app.add_middleware(
 # Load KB documents and build index once during API startup
 try:
     print("Initializing RAG index for API...")
-    docs = load_kb_documents("kb")
+    # Resolve 'kb' directory path relative to this file to prevent Vercel path issues
+    kb_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "kb")
+    if not os.path.exists(kb_path):
+        kb_path = "kb"
+    docs = load_kb_documents(kb_path)
     chunks = chunk_paragraph_based(docs)
     collection = build_chroma_index(chunks)
     print("RAG index initialized successfully.")
@@ -70,12 +74,13 @@ def get_dashboard():
 def get_metrics():
     # Read metrics directly from generated pipeline artifacts
     metrics = {}
+    root_dir = os.path.dirname(os.path.dirname(__file__))
     files_to_load = {
-        "eval": "artifacts/eval.json",
-        "chunking_comparison": "artifacts/chunking_comparison.json",
-        "grounding_check": "artifacts/grounding_check.json",
-        "answers": "artifacts/answers.json",
-        "retrieval": "artifacts/retrieval.json"
+        "eval": os.path.join(root_dir, "artifacts", "eval.json"),
+        "chunking_comparison": os.path.join(root_dir, "artifacts", "chunking_comparison.json"),
+        "grounding_check": os.path.join(root_dir, "artifacts", "grounding_check.json"),
+        "answers": os.path.join(root_dir, "artifacts", "answers.json"),
+        "retrieval": os.path.join(root_dir, "artifacts", "retrieval.json")
     }
     
     for key, path in files_to_load.items():
